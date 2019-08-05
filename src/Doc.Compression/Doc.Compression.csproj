@@ -9,4 +9,18 @@
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <authors>abatbouta;amarch</authors>
+    <owners>abatbouta</owners>
+    <description>A common for compression and dataUri parsing</description>
+    <copyright>Copyright 2019</copyright>
+    <PackageTags>
+      cost_center:103383,
+      bu:CT,
+      team_name:rendering,
+      contact_email:rendering-support@cimpress.com
+    </PackageTags>
+  </PropertyGroup>
+
+
 </Project>
