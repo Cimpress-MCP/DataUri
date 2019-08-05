@@ -1,0 +1,30 @@
+image: cimpress.githost.io:4678/docdesign/tools/build_image:latest
+
+stages:
+  - build
+  - publish
+
+cache:
+  key: "$CI_PIPELINE_ID"
+  untracked: true
+  paths:
+    - src
+    - artifacts
+
+build:
+  tags:
+    - docker
+  stage: build
+  script:
+    - dotnet pack --configuration Release --output ../../artifacts src/Doc.Compression/Doc.Compression.csproj /p:PackageVersion=0.0.1
+    - dotnet test src/Doc.Compression.sln
+    
+publish:
+  tags:
+    - docker
+  stage: publish
+  script:
+    - dotnet nuget push ./artifacts/*.nupkg -k $ARTIFACTORY_USERNAME:$ARTIFACTORY_API_KEY -s https://artifactory.cimpress.io/artifactory/api/nuget/nuget-release-local 
+  when: manual
+  only:
+    - master
