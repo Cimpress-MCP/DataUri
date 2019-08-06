@@ -1,112 +1,41 @@
 using Xunit;
+using Doc.Compression.Uri;
+using Doc.Compression.Tests.Models;
+using System.Drawing;
+using System.IO;
+using System.Drawing.Imaging;
 
 namespace Doc.Compression.Tests
 {
     public class DataUriTests
     {
         [Fact]
-        public void ValidDataUri()
+        public void CreateDataUriObject()
         {
-            string dataUriString = "data:application/json;base64,FooBar";
-            var dataUri = DataUri.Parse(dataUriString);
-
+            Person andrew = new Person()
+            {
+                Name = "andrew"
+            };
+            var dataUri = DataUri.FromObject(andrew, "application/json", true);
             Assert.True(dataUri.Base64);
-            Assert.Equal("FooBar", dataUri.Data);
-            Assert.Equal("application", dataUri.MediaType.Type);
-            Assert.Equal("json", dataUri.MediaType.SubType);
+            Assert.Equal("application/json", dataUri.MediaType.MimeType);
         }
 
         [Fact]
-        public void InvalidDataUri()
+        public void CreateDataUriFromByteArray()
         {
-            string dataUriString = "data:/application/json;base64,FooBar";
-            bool valid = DataUri.TryParse(dataUriString, out DataUri data);
+            byte[] bytes;
+            using (Bitmap bitmap = new Bitmap(5, 5))
+            using (MemoryStream memStream = new MemoryStream())
+            {
+                bitmap.SetPixel(1, 1, Color.Azure);
+                bitmap.Save(memStream, ImageFormat.Jpeg);
+                bytes = memStream.ToArray();
+            }
 
-            Assert.False(valid);
-        }
-
-        [Fact]
-        public void InvalidDataUriData()
-        {
-            string dataUriString = "data:/application/json;base64";
-            bool valid = DataUri.TryParse(dataUriString, out DataUri data);
-
-            Assert.False(valid);
-        }
-
-        [Fact]
-        public void InvalidDataUriIncomplete()
-        {
-            string dataUriString = "data:application/patch-ops-error+xml;conte";
-            bool valid = DataUri.TryParse(dataUriString, out DataUri data);
-
-            Assert.False(valid);
-        }
-
-        [Fact]
-        public void InvalidDataUriMissingHead()
-        {
-            string dataUriString = "application/json;base64";
-            bool valid = DataUri.TryParse(dataUriString, out DataUri data);
-
-            Assert.False(valid);
-        }
-
-        [Fact]
-        public void ValidDataUriNoBase64()
-        {
-            string dataUriString = "data:application/json,FooBar";
-            var dataUri = DataUri.Parse(dataUriString);
-
-            Assert.False(dataUri.Base64);
-            Assert.Equal("FooBar", dataUri.Data);
-            Assert.Equal("application", dataUri.MediaType.Type);
-            Assert.Equal("json", dataUri.MediaType.SubType);
-        }
-
-        [Fact]
-        public void ValidDataUriNoBase64Parameters()
-        {
-            string dataUriString = "data:application/json;content-coding=deflate,FooBar";
-            var dataUri = DataUri.Parse(dataUriString);
-
-            Assert.False(dataUri.Base64);
-            Assert.Equal("FooBar", dataUri.Data);
-            Assert.Equal("application", dataUri.MediaType.Type);
-            Assert.Equal("json", dataUri.MediaType.SubType);
-
-            Assert.True(dataUri.MediaType.Parameters.ContainsKey("content-coding"));
-            Assert.Equal("deflate", dataUri.MediaType.Parameters["content-coding"]);
-        }
-
-        [Fact]
-        public void ValidDataUriParameters()
-        {
-            string dataUriString = "data:application/json;content-coding=deflate;base64,FooBar";
-            var dataUri = DataUri.Parse(dataUriString);
-
+            var dataUri = DataUri.FromByteArray(bytes, "image/jpeg", true);
             Assert.True(dataUri.Base64);
-            Assert.Equal("FooBar", dataUri.Data);
-            Assert.Equal("application", dataUri.MediaType.Type);
-            Assert.Equal("json", dataUri.MediaType.SubType);
-
-            Assert.True(dataUri.MediaType.Parameters.ContainsKey("content-coding"));
-            Assert.Equal("deflate", dataUri.MediaType.Parameters["content-coding"]);
-        }
-
-        [Fact]
-        public void ValidDataUriMediaTypeOutlier()
-        {
-            string dataUriString = "data:application/patch-ops-error+xml;content-coding=deflate;base64,FooBar";
-            var dataUri = DataUri.Parse(dataUriString);
-
-            Assert.True(dataUri.Base64);
-            Assert.Equal("FooBar", dataUri.Data);
-            Assert.Equal("application", dataUri.MediaType.Type);
-            Assert.Equal("patch-ops-error+xml", dataUri.MediaType.SubType);
-
-            Assert.True(dataUri.MediaType.Parameters.ContainsKey("content-coding"));
-            Assert.Equal("deflate", dataUri.MediaType.Parameters["content-coding"]);
+            Assert.Equal("image/jpeg", dataUri.MediaType.MimeType);
         }
     }
 }

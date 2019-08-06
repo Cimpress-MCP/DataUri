@@ -2,19 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Doc.Compression.DataUri
+namespace Doc.Compression.Uri
 {
     public class MediaType
     {
-        public MediaType(string type, string subType, Dictionary<string, string> parameters)
+        public MediaType(string type, Dictionary<string, string> parameters)
         {
-            Type = type;
-            SubType = subType;
+            MimeType = type;
             Parameters = parameters;
         }
 
-        public string Type { get; }
-        public string SubType { get; }
+        public string MimeType { get; }
         public Dictionary<string, string> Parameters { get; }
 
         public static bool TryParse(string value, out MediaType mediaType)
@@ -24,12 +22,10 @@ namespace Doc.Compression.DataUri
             {
                 var splits = value.Split(';');
 
-                // Get type and subtype
-                var types = GetSplit(splits[0], '/');
                 // get params
                 var parameters = splits.Where(split => split.Contains("=")).ToDictionary(split => GetSplit(split, '=').Item1, split => GetSplit(split, '=').Item2);
 
-                mediaType = new MediaType(types.Item1, types.Item2, parameters);
+                mediaType = new MediaType(splits[0], parameters);
                 return true;
             }
 
@@ -54,7 +50,7 @@ namespace Doc.Compression.DataUri
 
         public override string ToString()
         {
-            string baseString = $"{Type}/{SubType}";
+            string baseString = MimeType;
             if (Parameters?.Count > 0)
             {
                 foreach(var pair in Parameters)
