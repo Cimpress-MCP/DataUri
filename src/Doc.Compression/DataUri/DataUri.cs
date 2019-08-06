@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Doc.Compression
+namespace Doc.Compression.DataUri
 {
     public class DataUri
     {
@@ -42,6 +42,12 @@ namespace Doc.Compression
             }
 
             return false;
+        }
+
+        public override string ToString()
+        {
+            string baseString = $"data:{MediaType.ToString()}";
+            return Base64 ? $"{baseString};base64,{Data}" : $"{baseString},{Data}";
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace Doc.Compression
+namespace Doc.Compression.DataUri
 {
     public static class DataUriRegex
     {

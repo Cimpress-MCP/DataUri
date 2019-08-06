@@ -4,14 +4,14 @@ using System.IO;
 using System.IO.Compression;
 using System.Text;
 
-namespace Doc.Compression
+namespace Doc.Compression.DataTransformation
 {
-    public static class Deflate
+    public class Deflate : IDataTransformer
     {
         /// <summary>
-        /// Decodes the input payload and handles deflating / base64 decoding if nessecary.
+        /// Defaltes the bytes to an object
         /// </summary>
-        public static T Decode<T>(byte[] input)
+        public T Decode<T>(byte[] input)
         {
             if (TryDecoding(input, out T deflatedPayload))
             {
@@ -23,7 +23,7 @@ namespace Doc.Compression
         /// <summary>
         /// Encodes a payload into a deflated string. Base64 encoded by default
         /// </summary>
-        public static string Encode(object payload)
+        public string Encode(object payload)
         {
             string json = JsonConvert.SerializeObject(payload);
 
@@ -39,7 +39,7 @@ namespace Doc.Compression
         }
 
         // Tries to deflate an input byte array into a given payload
-        public static bool TryDecoding<T>(byte[] input, out T output)
+        public bool TryDecoding<T>(byte[] input, out T output)
         {
             try
             {
@@ -74,6 +74,12 @@ namespace Doc.Compression
                 output = default;
                 return false;
             }
+        }
+
+        public T ToObject<T>(string data, bool base64)
+        {
+            byte[] state = base64 ? Convert.FromBase64String(data) : Encoding.UTF8.GetBytes(data);
+            return Decode<T>(state);
         }
     }
 }

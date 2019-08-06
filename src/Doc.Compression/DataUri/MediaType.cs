@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Doc.Compression
+namespace Doc.Compression.DataUri
 {
     public class MediaType
     {
@@ -50,6 +50,20 @@ namespace Doc.Compression
         {
             var split = value.Split(separator);
             return new Tuple<string, string>(split[0], split[1]);
-        } 
+        }
+
+        public override string ToString()
+        {
+            string baseString = $"{Type}/{SubType}";
+            if (Parameters?.Count > 0)
+            {
+                foreach(var pair in Parameters)
+                {
+                    baseString = $"{baseString};{pair.Key}={pair.Value}";
+                }
+            }
+
+            return baseString;
+        }
     }
 }

@@ -10,7 +10,7 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <authors>abatbouta;amarch</authors>
+    <authors>abatbouta;</authors>
     <owners>abatbouta</owners>
     <description>A common for compression and dataUri parsing</description>
     <copyright>Copyright 2019</copyright>
@@ -21,6 +21,4 @@
       contact_email:rendering-support@cimpress.com
     </PackageTags>
   </PropertyGroup>
-
-
 </Project>
