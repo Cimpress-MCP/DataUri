@@ -9,13 +9,11 @@ namespace Doc.Compression.Uri
 {
     public class DataUri
     {
-        public const string CONTENT_ENCODING = "Content-Encoding";
+        public const string CONTENT_ENCODING = "content-coding";
 
         private static Dictionary<string, IDataUriDeserializer> _dataUriDeserializers = new Dictionary<string, IDataUriDeserializer>
         {
-            { JsonDeserializer.APPLICATION_JSON, new JsonDeserializer()  },
-            { JsonDeserializer.APPLICATION_ZLIB, new JsonDeserializer() },
-            { JsonDeserializer.APPLICATION_GZIP, new JsonDeserializer() }
+            { JsonDeserializer.APPLICATION_JSON, new JsonDeserializer() },
         };
 
         public MediaType MediaType { get; }
@@ -94,10 +92,11 @@ namespace Doc.Compression.Uri
             return deserializer.DeserializeDataUri<T>(dataUri);
         }
 
-        public static DataUri FromObject(object obj, string mediaType, bool base64, Dictionary<string, string> mediaTypeParams = null)
+        public static DataUri FromObject(object obj, DataUriEncoderSettings settings)
         {
-            string data = JsonConvert.SerializeObject(obj);
-            return FromByteArray(Encoding.UTF8.GetBytes(data), mediaType, base64, mediaTypeParams);
+            byte[] data = settings.Serializer().serialize(obj);
+            byte[] dataCompressed = settings.Compressor().Compress(data);
+            return FromByteArray(dataCompressed, settings.Serializer().MediaType, settings.Base64, settings.Compressor().MediaTypeParams);
         }
 
         public static DataUri FromObject(object obj, string mediaType, bool base64, string encoding, Dictionary<string, string> mediaTypeParams = null)

@@ -27,8 +27,8 @@ namespace Doc.Compression.Deserialization
             {
                 return FromGZip<T>(rawBytes);
             }
-
-            return JsonConvert.DeserializeObject<T>(dataUri.Data);
+            var data = dataUri.Base64 ? Encoding.UTF8.GetString(rawBytes) : dataUri.Data;
+            return JsonConvert.DeserializeObject<T>(data);
         }
 
         private T FromGZip<T>(byte[] bytes)
