@@ -1,6 +1,4 @@
-﻿using Doc.Compression.Compression;
-using Doc.Compression.Deserialization;
-using Newtonsoft.Json;
+﻿using Doc.Compression.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -13,7 +11,7 @@ namespace Doc.Compression.Uri
 
         private static Dictionary<string, IDataUriDeserializer> _dataUriDeserializers = new Dictionary<string, IDataUriDeserializer>
         {
-            { JsonDeserializer.APPLICATION_JSON, new JsonDeserializer() },
+            { JsonDeserializer.MediaType, new JsonDeserializer() },
         };
 
         public MediaType MediaType { get; }
@@ -92,27 +90,18 @@ namespace Doc.Compression.Uri
             return deserializer.DeserializeDataUri<T>(dataUri);
         }
 
-        public static DataUri FromObject(object obj, DataUriEncoderSettings settings)
+        public static DataUri FromObject(object obj)
         {
             byte[] data = settings.Serializer().serialize(obj);
             byte[] dataCompressed = settings.Compressor().Compress(data);
             return FromByteArray(dataCompressed, settings.Serializer().MediaType, settings.Base64, settings.Compressor().MediaTypeParams);
         }
 
-        public static DataUri FromObject(object obj, string mediaType, bool base64, string encoding, Dictionary<string, string> mediaTypeParams = null)
+        public static DataUri FromObject(object obj, ObjectSerializationSettings settings)
         {
-            string data = JsonConvert.SerializeObject(obj);
-            Dictionary<string, string> mediaParams = mediaTypeParams ?? new Dictionary<string, string>();
-            mediaParams.Add(CONTENT_ENCODING, encoding);
-            if (Deflate.DEFLATE.Equals(encoding))
-            {
-                return FromByteArray(Deflate.Encode(data), mediaType, base64, mediaParams);
-            }
-            else if (GZip.GZIP.Equals(encoding))
-            {
-                return FromByteArray(GZip.Encode(data), mediaType, base64, mediaParams);
-            }
-            throw new ArgumentException($"Unknown encoding type for parameter encoding of: {encoding}");
+            byte[] data = settings.Serializer().serialize(obj);
+            byte[] dataCompressed = settings.Compressor().Compress(data);
+            return FromByteArray(dataCompressed, settings.Serializer().MediaType, settings.Base64, settings.Compressor().MediaTypeParams);
         }
 
         public static DataUri FromByteArray(byte[] bytes, string mediaType, bool base64, Dictionary<string, string> mediaTypeParameters = null)

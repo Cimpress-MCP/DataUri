@@ -17,7 +17,7 @@ namespace Doc.Compression.Tests
             {
                 Name = "andrew"
             };
-            var dataUri = DataUri.FromObject(andrew, "application/json", true);
+            var dataUri = DataUri.FromObject(andrew);
             Assert.True(dataUri.Base64);
             Assert.Equal("application/json", dataUri.MediaType.MimeType);
         }

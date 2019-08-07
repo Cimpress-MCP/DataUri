@@ -4,15 +4,12 @@ using Newtonsoft.Json;
 using System;
 using System.Text;
 
-namespace Doc.Compression.Deserialization
+namespace Doc.Compression.Serialization
 {
     public class JsonDeserializer : IDataUriDeserializer
     {
-
-        public const string APPLICATION_GZIP = "application/gzip";
-        public const string APPLICATION_ZLIB = "application/zlib";
-        public const string APPLICATION_JSON = "application/json";
-
+        public const string MediaType = "application/json";
+        private readonly Compression
         public T DeserializeDataUri<T>(DataUri dataUri)
         {
             var rawBytes = dataUri.Base64 ? Convert.FromBase64String(dataUri.Data) : null;
