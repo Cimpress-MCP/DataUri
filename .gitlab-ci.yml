@@ -2,13 +2,13 @@ image: cimpress.githost.io:4678/docdesign/tools/build_image:latest
 
 stages:
   - build
+  - test
   - publish
 
 cache:
   key: "$CI_PIPELINE_ID"
   untracked: true
   paths:
-    - src
     - artifacts
 
 build:
@@ -16,8 +16,15 @@ build:
     - docker
   stage: build
   script:
-    - dotnet pack --configuration Release --output ../../artifacts src/Doc.Compression/Doc.Compression.csproj /p:PackageVersion=0.0.1
-    - dotnet test src/Doc.Compression.sln
+    - dotnet pack --configuration Release --output ../../artifacts src/Cimpress.DataUri/Cimpress.DataUri.csproj /p:PackageVersion=0.0.1
+
+test:
+  tags:
+    - docker
+  stage: test
+  script:
+    - apt-get update; apt-get install libfreeimage3 libfreetype6 libfontconfig1 -y
+    - dotnet test --configuration Release src/Cimpress.DataUri.sln
     
 publish:
   tags:
