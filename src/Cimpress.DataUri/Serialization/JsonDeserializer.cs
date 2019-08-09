@@ -5,9 +5,20 @@ using System.Text;
 
 namespace Cimpress.DataUri.Serialization
 {
+    /// <summary>
+    /// Default deserializer to handle application/json dataUris.
+    /// By default handles content-codings for deflate and gzip
+    /// </summary>
     public class JsonDeserializer : IDataUriDeserializer
     {
         public const string MediaType = "application/json";
+        /// <summary>
+        /// Deserializer to handle deserializing dataUris
+        /// Will use data and JsonConvert to compose media types of application/json into objects
+        /// </summary>
+        /// <param name="dataUri">DataUri to deserialize</param>
+        /// <param name="targetType">Type of object to turn data into</param>
+        /// <returns></returns>
         public object DeserializeDataUri(DataUri dataUri, Type targetType)
         {
             var rawBytes = dataUri.Base64 ? Convert.FromBase64String(dataUri.Data) : null;

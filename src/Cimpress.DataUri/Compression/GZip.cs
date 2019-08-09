@@ -5,13 +5,18 @@ using System.Text;
 
 namespace Cimpress.DataUri.Compression
 {
+    /// <summary>
+    /// Class to handle encoding and decoding byte array with the gzip algorithm
+    /// </summary>
     public static class GZip
     {
         public const string GZIP = "gzip";
 
         /// <summary>
-        /// Decodes the input payload and handles deflating / base64 decoding if nessecary.
+        /// Decodes a Gziped byte array
         /// </summary>
+        /// <param name="input"></param>
+        /// <returns>Decoded byte array</returns>
         public static byte[] Decode(byte[] input)
         {
             if (TryDecoding(input, out byte[] deflatedPayload))
@@ -22,11 +27,23 @@ namespace Cimpress.DataUri.Compression
         }
 
         /// <summary>
-        /// Encodes a payload into a deflated string.
+        /// Encodes a string using the Gzip algorithm
         /// </summary>
+        /// <param name="payload"></param>
+        /// <returns>Encoded byte array</returns>
         public static byte[] Encode(string payload)
         {
-            using (var inputStream = new MemoryStream(Encoding.UTF8.GetBytes(payload)))
+            return Encode(Encoding.UTF8.GetBytes(payload));
+        }
+
+        /// <summary>
+        /// Encodeds a byte array using the Gzip algorithm
+        /// </summary>
+        /// <param name="payload"></param>
+        /// <returns></returns>
+        public static byte[] Encode(byte[] payload)
+        {
+            using (var inputStream = new MemoryStream(payload))
             using (var outputStream = new MemoryStream())
             using (var zipStream = new GZipStream(outputStream, CompressionMode.Compress))
             {
@@ -37,7 +54,12 @@ namespace Cimpress.DataUri.Compression
             }
         }
 
-        // Tries to deflate an input byte array into a given payload
+        /// <summary>
+        /// Attempt to decode a byte array using the Gzip algorithm
+        /// </summary>
+        /// <param name="input">byte array to decode</param>
+        /// <param name="output">decoded byte array</param>
+        /// <returns>If decoding was successful</returns>
         public static bool TryDecoding(byte[] input, out byte[] output)
         {
             try
