@@ -3,7 +3,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Text;
 
-namespace Doc.Compression.Compression
+namespace Cimpress.DataUri.Compression
 {
     public static class Deflate
     {

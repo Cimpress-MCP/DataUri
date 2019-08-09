@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Doc.Compression.Tests.Models
+namespace Cimpress.DataUri.Tests.Models
 {
     public class Person
     {

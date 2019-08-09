@@ -1,45 +1,44 @@
-﻿using Doc.Compression.Compression;
-using Doc.Compression.Uri;
+﻿using Cimpress.DataUri.Compression;
 using Newtonsoft.Json;
 using System;
 using System.Text;
 
-namespace Doc.Compression.Serialization
+namespace Cimpress.DataUri.Serialization
 {
     public class JsonDeserializer : IDataUriDeserializer
     {
         public const string MediaType = "application/json";
-        private readonly Compression
-        public T DeserializeDataUri<T>(DataUri dataUri)
+        public object DeserializeDataUri(DataUri dataUri, Type targetType)
         {
             var rawBytes = dataUri.Base64 ? Convert.FromBase64String(dataUri.Data) : null;
 
             var encoding = dataUri.MediaType.Parameters?.Count > 0 && dataUri.MediaType.Parameters.ContainsKey(DataUri.CONTENT_ENCODING) ? dataUri.MediaType.Parameters[DataUri.CONTENT_ENCODING] : null;
-            // Check for deflate
-            if (APPLICATION_ZLIB.Equals(dataUri.MediaType.MimeType) || Deflate.DEFLATE.Equals(encoding))
+
+            // Check if there were content codings
+            if (Deflate.DEFLATE.Equals(encoding))
             {
-                return FromDeflated<T>(rawBytes);
+                return FromDeflated(rawBytes, targetType);
             }
-            else if (APPLICATION_GZIP.Equals(dataUri.MediaType.MimeType) || GZip.GZIP.Equals(encoding))
+            else if (GZip.GZIP.Equals(encoding))
             {
-                return FromGZip<T>(rawBytes);
+                return FromGZip(rawBytes, targetType);
             }
             var data = dataUri.Base64 ? Encoding.UTF8.GetString(rawBytes) : dataUri.Data;
-            return JsonConvert.DeserializeObject<T>(data);
+            return JsonConvert.DeserializeObject(data, targetType);
         }
 
-        private T FromGZip<T>(byte[] bytes)
+        private object FromGZip(byte[] bytes, Type targetType)
         {
             byte[] decoded = GZip.Decode(bytes);
             string serialized = Encoding.UTF8.GetString(decoded);
-            return JsonConvert.DeserializeObject<T>(serialized);
+            return JsonConvert.DeserializeObject(serialized, targetType);
         }
 
-        private T FromDeflated<T>(byte[] bytes)
+        private object FromDeflated(byte[] bytes, Type targetType)
         {
             byte[] decoded = Deflate.Decode(bytes);
             string serialized = Encoding.UTF8.GetString(decoded);
-            return JsonConvert.DeserializeObject<T>(serialized);
+            return JsonConvert.DeserializeObject(serialized, targetType);
         }
     }
 }

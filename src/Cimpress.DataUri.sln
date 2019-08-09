@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29123.88
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Doc.Compression", "Doc.Compression\Doc.Compression.csproj", "{46BE6082-2043-4091-9085-B11348BB61D4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cimpress.DataUri", "Cimpress.DataUri\Cimpress.DataUri.csproj", "{46BE6082-2043-4091-9085-B11348BB61D4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Doc.Compression.Tests", "Doc.Compression.Tests\Doc.Compression.Tests.csproj", "{57FC0BF2-53AA-487B-B40B-52BC6E880914}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cimpress.DataUri.Tests", "Cimpress.DataUri.Tests\Cimpress.DataUri.Tests.csproj", "{57FC0BF2-53AA-487B-B40B-52BC6E880914}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

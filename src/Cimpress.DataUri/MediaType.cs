@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Doc.Compression.Uri
+namespace Cimpress.DataUri
 {
     public class MediaType
     {

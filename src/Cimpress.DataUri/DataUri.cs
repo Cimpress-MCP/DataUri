@@ -1,9 +1,9 @@
-﻿using Doc.Compression.Serialization;
+﻿using Cimpress.DataUri.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Doc.Compression.Uri
+namespace Cimpress.DataUri
 {
     public class DataUri
     {
@@ -17,6 +17,7 @@ namespace Doc.Compression.Uri
         public MediaType MediaType { get; }
         public string Data { get; }
         public bool Base64 { get; }
+        public static ObjectSerializationSettings DefaultSerializationSettings { get; } = new ObjectSerializationSettings(new ObjectSerializer(), "application/json", true, null);
 
         public DataUri(MediaType mediaType, string data, bool base64)
         {
@@ -87,21 +88,18 @@ namespace Doc.Compression.Uri
         public static T ToObject<T>(DataUri dataUri)
         {
             IDataUriDeserializer deserializer = GetDataUriDeserializer(dataUri.MediaType.MimeType);
-            return deserializer.DeserializeDataUri<T>(dataUri);
+            return (T)deserializer.DeserializeDataUri(dataUri, typeof(T));
         }
 
         public static DataUri FromObject(object obj)
         {
-            byte[] data = settings.Serializer().serialize(obj);
-            byte[] dataCompressed = settings.Compressor().Compress(data);
-            return FromByteArray(dataCompressed, settings.Serializer().MediaType, settings.Base64, settings.Compressor().MediaTypeParams);
+            return FromObject(obj, DefaultSerializationSettings);
         }
 
         public static DataUri FromObject(object obj, ObjectSerializationSettings settings)
         {
-            byte[] data = settings.Serializer().serialize(obj);
-            byte[] dataCompressed = settings.Compressor().Compress(data);
-            return FromByteArray(dataCompressed, settings.Serializer().MediaType, settings.Base64, settings.Compressor().MediaTypeParams);
+            byte[] data = settings.Serializer.Serialize(obj);
+            return FromByteArray(data, settings.MediaType, settings.Base64, settings.GetAllMediaTypeParameters());
         }
 
         public static DataUri FromByteArray(byte[] bytes, string mediaType, bool base64, Dictionary<string, string> mediaTypeParameters = null)
