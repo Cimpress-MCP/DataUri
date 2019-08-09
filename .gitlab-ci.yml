@@ -28,9 +28,7 @@ test:
         libfreeimage3
         libfreetype6 libfontconfig1 -y
 
-    - cd /usr/lib/x86_64-linux-gnu/ && 
-      ln -s libfreeimage.so.3 FreeImage.so
-    - cd ~
+    - ln -s /usr/lib/x86_64-linux-gnu/libfreeimage.so.3 /usr/lib/x86_64-linux-gnu/FreeImage.so
     - dotnet test --configuration Release src/Cimpress.DataUri.sln
     
 publish:
