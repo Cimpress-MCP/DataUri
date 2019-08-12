@@ -1,5 +1,6 @@
-﻿using SkiaSharp;
-using System;
+﻿using System;
+using System.Drawing;
+using System.IO;
 using System.Text;
 
 namespace Cimpress.DataUri.Tests.Helpers
@@ -10,16 +11,12 @@ namespace Cimpress.DataUri.Tests.Helpers
 
         public object DeserializeDataUri(DataUri dataUri, Type targetType)
         {
-            byte[] imageBytes;
-            if(dataUri.Base64)
+            byte[] imageBytes = dataUri.Base64 ? Convert.FromBase64String(dataUri.Data) : Encoding.UTF8.GetBytes(dataUri.Data);
+
+            using (MemoryStream memStream = new MemoryStream(imageBytes))
             {
-                imageBytes = Convert.FromBase64String(dataUri.Data);
+                return new Bitmap(memStream);
             }
-            else
-            {
-                imageBytes = Encoding.UTF8.GetBytes(dataUri.Data);
-            }
-            return SKImage.FromEncodedData(imageBytes);
         }
     }
 }

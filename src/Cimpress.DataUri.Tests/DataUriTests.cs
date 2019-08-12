@@ -2,10 +2,10 @@ using Xunit;
 using System;
 using System.Drawing;
 using Cimpress.DataUri.Tests.Models;
-using SkiaSharp;
 using System.IO;
 using Cimpress.DataUri.Tests.Helpers;
 using Cimpress.DataUri.Serialization;
+using System.Drawing.Imaging;
 
 namespace Cimpress.DataUri.Tests
 {
@@ -62,23 +62,24 @@ namespace Cimpress.DataUri.Tests
         public void AddNewObjectSerializerImage()
         {
             byte[] bytes;
-            using (SKBitmap bitmap = new SKBitmap(10, 10))
-            using (SKCanvas canvas = new SKCanvas(bitmap))
+            using (Bitmap bitmap = new Bitmap(10, 10))
             {
-                bitmap.SetPixel(2, 2, SKColor.Parse("#FFAA22"));
-                SKImage img = SKImage.FromBitmap(bitmap);
-                SKData data = img.Encode(SKEncodedImageFormat.Png, 100);
+                bitmap.SetPixel(2, 2, Color.Aquamarine);
                 using(MemoryStream memStream = new MemoryStream())
                 {
-                    data.SaveTo(memStream);
+                    bitmap.Save(memStream, ImageFormat.Png);
                     bytes = memStream.ToArray();
                 }
                 DataUri dataUri = DataUri.FromByteArray(bytes, "image/png", true);
 
                 DataUri.RegisterDataDeserializer("image/png", new ImageDeserializer());
-                SKImage image = DataUri.ToObject<SKImage>(dataUri);
-                Assert.True(img.Width == image.Width);
-                Assert.True(img.Height == image.Height);
+                Bitmap image = DataUri.ToObject<Bitmap>(dataUri);
+                Assert.True(bitmap.Width == image.Width);
+                Assert.True(bitmap.Height == image.Height);
+
+                var tmp = image.GetPixel(2, 2);
+
+                Assert.True(image.GetPixel(2, 2).ToArgb() == Color.Aquamarine.ToArgb());
             }
         }
 
