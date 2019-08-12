@@ -11,7 +11,7 @@ namespace Cimpress.DataUri.Serialization
         /// <param name="mediaType">The mediaType of the end result (application/json, image/png)</param>
         /// <param name="base64">Whether to base 64 encode bytes from the serializer</param>
         /// <param name="mediaTypeParams">Additional parameters to add to data Uri (charset=UTF-8)</param>
-        public ObjectSerializationSettings(IObjectSerializer serializer, string mediaType, bool base64, Dictionary<string, string> mediaTypeParams)
+        public ObjectSerializationSettings(IObjectSerializer serializer, string mediaType, bool base64 = true, Dictionary<string, string> mediaTypeParams = null)
         {
             Serializer = serializer;
             MediaType = mediaType;

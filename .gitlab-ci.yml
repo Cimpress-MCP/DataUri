@@ -16,7 +16,7 @@ build:
     - docker
   stage: build
   script:
-    - dotnet pack --configuration Release --output ../../artifacts src/Cimpress.DataUri/Cimpress.DataUri.csproj /p:PackageVersion=0.0.1
+    - dotnet pack --configuration Release --include-symbols --output ../artifacts src/Cimpress.DataUri.sln
 
 test:
   image: microsoft/dotnet:2.2-sdk
@@ -38,7 +38,7 @@ publish:
     - docker
   stage: publish
   script:
-    - dotnet nuget push ./artifacts/*.nupkg -k $ARTIFACTORY_USERNAME:$ARTIFACTORY_API_KEY -s https://artifactory.cimpress.io/artifactory/api/nuget/nuget-release-local 
+    - dotnet nuget push ./artifacts/*.nupkg -k $NUGET_ORG_APIKEY
   when: manual
   only:
     - master

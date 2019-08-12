@@ -15,8 +15,7 @@
     <description>A common library for dataUri parsing and creation</description>
     <copyright>Copyright 2019</copyright>
     <PackageTags></PackageTags>
-    <SignAssembly>false</SignAssembly>
     <Company>Cimpress Technology</Company>
-    <Version>0.0.1</Version>
+    <Version>0.1.0</Version>
   </PropertyGroup>
 </Project>

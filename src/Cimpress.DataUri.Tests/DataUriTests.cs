@@ -6,6 +6,7 @@ using System.IO;
 using Cimpress.DataUri.Tests.Helpers;
 using Cimpress.DataUri.Serialization;
 using System.Drawing.Imaging;
+using Newtonsoft.Json;
 
 namespace Cimpress.DataUri.Tests
 {
@@ -92,9 +93,6 @@ namespace Cimpress.DataUri.Tests
                 Bitmap image = DataUri.ToObject<Bitmap>(dataUri);
                 Assert.True(bitmap.Width == image.Width);
                 Assert.True(bitmap.Height == image.Height);
-
-                var tmp = image.GetPixel(2, 2);
-
                 Assert.True(image.GetPixel(2, 2).ToArgb() == Color.Aquamarine.ToArgb());
             }
         }
@@ -102,7 +100,7 @@ namespace Cimpress.DataUri.Tests
         [Fact]
         public void AddNewObjectSerializerJson()
         {
-            var serializationSettings = new ObjectSerializationSettings(new GZipSerializer(), "application/json", true, null);
+            var serializationSettings = new ObjectSerializationSettings(new GZipSerializer(), "application/json");
             Person andrew = new Person()
             {
                 Name = "andrew"
