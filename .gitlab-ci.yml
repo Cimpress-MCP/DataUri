@@ -24,11 +24,8 @@ test:
     - docker
   stage: test
   script:
-    - apt-get update;apt-get install
-        libfreeimage3
-        libfreetype6 libfontconfig1 -y
-
-    - ln -s /usr/lib/x86_64-linux-gnu/libfreeimage.so.3 /usr/lib/x86_64-linux-gnu/FreeImage.so
+    - apt-get install -y libgdiplus
+    - ln -s /lib64/libdl.so.2 /lib64/libdl.so
     - dotnet test --configuration Release src/Cimpress.DataUri.sln
     
 publish:
