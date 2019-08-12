@@ -1,5 +1,4 @@
 ﻿using Cimpress.DataUri.Compression;
-using Cimpress.DataUri.Serialization;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 

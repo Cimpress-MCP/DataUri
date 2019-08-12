@@ -7,19 +7,16 @@
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
-    <PackageReference Include="System.Drawing.Common" Version="4.5.1" />
   </ItemGroup>
 
   <PropertyGroup>
     <authors>abatbouta;</authors>
     <owners>abatbouta</owners>
-    <description>A common for compression and dataUri parsing</description>
+    <description>A common library for dataUri parsing and creation</description>
     <copyright>Copyright 2019</copyright>
-    <PackageTags>
-      cost_center:103383,
-      bu:CT,
-      team_name:rendering,
-      contact_email:rendering-support@cimpress.com
-    </PackageTags>
+    <PackageTags></PackageTags>
+    <SignAssembly>false</SignAssembly>
+    <Company>Cimpress Technology</Company>
+    <Version>0.0.1</Version>
   </PropertyGroup>
 </Project>

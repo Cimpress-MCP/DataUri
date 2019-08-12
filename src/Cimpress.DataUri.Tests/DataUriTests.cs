@@ -24,6 +24,22 @@ namespace Cimpress.DataUri.Tests
         }
 
         [Fact]
+        public void SimpleDataUriParse()
+        {
+            string dataUri = "data:application/json,{\"name\":\"andrew\"}";
+            Person andrew = DataUri.ToObject<Person>(dataUri);
+            Assert.Equal("andrew", andrew.Name);
+        }
+
+        [Fact]
+        public void SimpleDataUriParseBase64()
+        {
+            string dataUri = "data:application/json;base64,eyJuYW1lIjoiYW5kcmV3In0=";
+            Person andrew = DataUri.ToObject<Person>(dataUri);
+            Assert.Equal("andrew", andrew.Name);
+        }
+
+        [Fact]
         public void TransformDataUriBackToObject()
         {
             Person andrew = new Person()
@@ -35,7 +51,7 @@ namespace Cimpress.DataUri.Tests
             Assert.True(dataUri.Base64);
             Assert.Equal("application/json", dataUri.MediaType.MimeType);
 
-            Assert.True(Uri.IsWellFormedUriString(dataUri.ToString(), System.UriKind.Absolute));
+            Assert.True(Uri.IsWellFormedUriString(dataUri.ToString(), UriKind.Absolute));
 
             Person andy = DataUri.ToObject<Person>(dataUri);
 
@@ -59,7 +75,7 @@ namespace Cimpress.DataUri.Tests
         }
 
         [Fact]
-        public void AddNewObjectSerializerImage()
+        public void AddNewObjectDeserializerImage()
         {
             byte[] bytes;
             using (Bitmap bitmap = new Bitmap(10, 10))
